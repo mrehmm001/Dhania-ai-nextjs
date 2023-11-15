@@ -13,8 +13,8 @@ const SettingsPage = () => {
                     title= "Settings"
                     description="Manage account settings"
                     icon={Settings}
-                    iconColour="text-gray-700"
-                    bgColour="bg-gray-700/10"
+                    iconColour="text-white"
+                    bgColour="bg-primary"
                 />
                 <div className="px-4 lg:px-8 space-y-4">
                     <div className="text-muted-foreground text-sm">

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 // import { checkSubscription } from "@/lib/subscription";
 import { Amplify } from "aws-amplify";
 import awsExports from "@/aws-exports.json";
+import { UserButton } from "@clerk/nextjs";
 
 Amplify.configure({ ...awsExports, ssr: true });
 
@@ -23,15 +24,7 @@ const Navbar = ({apiLimitCount=0}:NavbarProps) => {
         <div className="flex items-center p-4">
             <MobileSidebar isPro={isPro} apiLimitCount={apiLimitCount}/>
             <div className="flex w-full justify-end">
-                {/* <UserButton afterSignOutUrl="/"/> */}
-                <Button onClick={ async()=>{
-                try {
-                        await Auth.signOut();
-                        router.push("/signin");
-                    } catch (error) {
-                        console.log("error signing out: ", error);
-                    }
-                }}>Sign out</Button>
+                <UserButton afterSignOutUrl="/"/>
             </div>
         </div>
      );

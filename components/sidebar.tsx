@@ -14,49 +14,16 @@ const routes = [
         label:"Dashboard",
         icon:LayoutDashboard,
         href: "/dashboard",
-        colour: "text-sky-500"
     },
     {
-        label:"Conversation",
+        label:"Query",
         icon:MessageSquare,
-        href: "/conversation",
-        colour: "text-violet-500"
-    },
-    // {
-    //     label:"Image Generation",
-    //     icon:ImageIcon,
-    //     href: "/image",
-    //     colour: "text-pink-700"
-    // },
-    // {
-    //     label:"Video Generation",
-    //     icon:VideoIcon,
-    //     href: "/video",
-    //     colour: "text-orange-700"
-    // },
-    // {
-    //     label:"Music Generation",
-    //     icon:Music,
-    //     href: "/music",
-    //     colour: "text-emerald-500"
-    // },
-    {
-        label:"Code Generation",
-        icon:Code,
-        href: "/code",
-        colour: "text-green-700"
-    },
-    {
-        label:"Search",
-        icon:Search,
-        href: "/search",
-        colour: "text-orange-700"
+        href: "/query",
     },
     {
         label:"Data Ingestion",
         icon:Database,
         href: "/data",
-        colour: "text-pink-700"
     },
     {
         label:"Settings",
@@ -73,7 +40,7 @@ interface SidebarProps{
 const Sidebar = ({apiLimitCount=0, isPro=false}:SidebarProps) => {
     const pathName = usePathname();
     return ( 
-        <div className="space-y-4 py-4 flex flex-col h-full bg-[#00081a] text-white">
+        <div className="space-y-4 py-4 flex flex-col h-full bg-primary text-white">
             <div className="px-3 py-2 flex-1">
                 <Link href="/dashboard" className="flex items-center pl-3 mb-14">
                     <div className="relative w-8 h-8 mr-4">
@@ -96,7 +63,6 @@ const Sidebar = ({apiLimitCount=0, isPro=false}:SidebarProps) => {
                     ))}
                 </div>
             </div>
-            <FreeCounter isPro={isPro} apiLimitCount={apiLimitCount}/>
         </div>
      );
 };

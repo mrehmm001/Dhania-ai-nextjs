@@ -2,8 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserAvatar = () => {
     const user = {
-        firstName:"bob",
-        lastName:"idk",
+        firstName:"Muneeb",
+        lastName:"Rehman",
         imageUrl: "test"
     }
     return ( 

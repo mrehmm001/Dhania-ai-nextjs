@@ -3,44 +3,23 @@
 import AmplifyProvider from "@/components/amplify-provider";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Code, ImageIcon, MessageSquare, Music, VideoIcon } from "lucide-react";
+import { ArrowRight, Code, Database, ImageIcon, MessageSquare, Music, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const tools = [
   {
-    label:"Conversation",
+    label:"Query",
     icon:MessageSquare,
     colour: "text-violet-500",
     bgColour: "bg-violet-500/10",
-    href: "/conversation"
+    href: "/query"
   },
   {
-    label:"Music Generation",
-    icon:Music,
-    colour: "text-emerald-500",
-    bgColour: "bg-emerald-500/10",
-    href: "/music"
-  },
-  {
-    label:"Image Generation",
-    icon:ImageIcon,
+    label:"Data Ingestion",
+    icon:Database,
     colour: "text-pink-700",
     bgColour: "bg-pink-700/10",
-    href: "/image"
-  },
-  {
-    label:"Video Generation",
-    icon:VideoIcon,
-    colour: "text-orange-700",
-    bgColour: "bg-orange-700/10",
     href: "/video"
-  },
-  {
-    label:"Code Generation",
-    icon:Code,
-    colour: "text-green-700",
-    bgColour: "bg-green-700/10",
-    href: "/code"
   },
 ]
 
