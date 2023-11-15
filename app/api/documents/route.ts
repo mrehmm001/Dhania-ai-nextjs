@@ -10,7 +10,7 @@ import { PineconeStore } from "langchain/vectorstores/pinecone";
 const pinecone = new Pinecone({
     apiKey: process.env["PINECONE_API_KEY"]!,
     environment: 'gcp-starter',
-  });
+});
 export async function POST(
     req:Request
 ){
@@ -25,16 +25,16 @@ export async function POST(
         where:{fileName:fileBlob.name}
     })
     
-    //Store data to pineconedb
     const loader = new PDFLoader(fileBlob)
     const document = await loader.load();
-
+    
     
     const text_splitter = new RecursiveCharacterTextSplitter({chunkSize:1000,chunkOverlap:0,separators:[" ", ",", "\n"]})
     const documents = await text_splitter.splitDocuments(document);
-
+    
     const embeddings = new OpenAIEmbeddings({openAIApiKey:process.env["OPENAI_API_KEY"]})
     const index = pinecone.index("medium-blog-embeddings-index");
+    //Store data to pineconedb
     await PineconeStore.fromDocuments(documents,embeddings,{pineconeIndex:index})
 
 
