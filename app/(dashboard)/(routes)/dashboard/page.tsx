@@ -10,15 +10,15 @@ const tools = [
   {
     label:"Query",
     icon:MessageSquare,
-    colour: "text-violet-500",
-    bgColour: "bg-violet-500/10",
+    iconColour:"text-white",
+    bgColour:"bg-primary",
     href: "/query"
   },
   {
     label:"Data Ingestion",
     icon:Database,
-    colour: "text-pink-700",
-    bgColour: "bg-pink-700/10",
+    iconColour:"text-white",
+    bgColour:"bg-primary",
     href: "/video"
   },
 ]
@@ -29,9 +29,9 @@ export default function DashboardPage() {
       <div>
           <div className="mb-8 space-y-4">
             <h2 className="text-2xl md:text-4xl font-bold text-center">
-                Explore the power of AI
+                Explore the power of Dhania
             </h2>
-            <p className="text-muted-foreground font-light text-sm md:text-lg text-center">Chat with the smarted AI - Experience the power of AI</p>
+            <p className="text-muted-foreground font-light text-sm md:text-lg text-center">Query with Dhania - Experience the power of AI</p>
           </div>
           <div className="px-4 md:px-20 lg:px-32 space-y-4">
             {tools.map(tool=>(
@@ -40,7 +40,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-x-4">
                   <div className={cn("p-2 w-fit rounded-md", tool.bgColour)}>
-                    <tool.icon className={cn("w-8 h-8", tool.colour)}/>
+                    <tool.icon className={cn("w-8 h-8", tool.iconColour)}/>
                   </div>
                   <div className="font-semibold">
                     {tool.label}

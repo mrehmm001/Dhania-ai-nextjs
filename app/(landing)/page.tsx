@@ -1,20 +1,15 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
+
+import HeroSection from "@/components/landing_page_components/HeroSection";
+import Navbar from "@/components/landing_page_components/Navbar";
 
 const LandingPage = () => {
     return ( 
-        <div>
-            <div>Landing page (Unprotected)</div>
-            <Link href="/sign-in">
-                <Button>
-                    Login
-                </Button>
-            </Link>
-            <Link href="/sign-up">
-                <Button>
-                    Register
-                </Button>
-            </Link>
+        <div className="bg-zinc-900 text-white flex justify-center">
+            <div className="w-1/2">
+                <Navbar/>
+                <HeroSection/>
+            </div>
         </div>
      );
 }

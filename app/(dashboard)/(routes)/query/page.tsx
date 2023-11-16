@@ -1,7 +1,7 @@
 "use client";
 
 import Heading from "@/components/heading";
-import { MessageSquare, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronUp, MessageSquare, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { formSchema } from "./constants";
@@ -24,15 +24,16 @@ import { io } from 'socket.io-client';
 import { useUser } from "@clerk/nextjs";
 import ReactMarkdown from "react-markdown";
 
+type chatCompetionInterface = ChatCompletionMessageParam &{
+    metaData?:string,
+}
+
+
 const QueryPage = () => {
     const proModal = useProModal();
     const router = useRouter();
-    const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
-    const [isStreaming, setStreaming] = useState(false);
-    const socket = io("http://localhost:3001",);
-    const [isConnected, setIsConnected] = useState(socket.connected);
-    const ref = useRef<HTMLInputElement>(null);
-    const user = useUser();
+    const [messages, setMessages] = useState<chatCompetionInterface[]>([]);
+    const [toggleMetaData, setToggleMetaData] = useState(new Map<chatCompetionInterface,boolean>());
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues:{
@@ -44,19 +45,20 @@ const QueryPage = () => {
 
     const onSubmit =async (values:z.infer<typeof formSchema>) => {
         try{
-            const userMessage: ChatCompletionMessageParam = {
+            const userMessage: chatCompetionInterface = {
                 role:"user",
                 content:values.prompt
             };
             setMessages((current)=>[...current , userMessage])
-            // const newMessages = [...messages, userMessage];
             const response = await axios.post("/api/query", {
-                query:userMessage
+                query:userMessage.content
             });
-            const assistantMessage: ChatCompletionMessageParam = {
+            const assistantMessage: chatCompetionInterface= {
                 role:"assistant",
-                content:response.data
+                content:response.data["text"],
+                metaData: response.data["sourceDocuments"]
             };
+            toggleMetaData.set(assistantMessage,false);
             setMessages((current)=>[...current , assistantMessage]);
             form.reset();
         }catch(error:any){
@@ -71,54 +73,72 @@ const QueryPage = () => {
         }
     }
 
+    const handleToggleMetaData = (message: chatCompetionInterface) => {
+        setToggleMetaData(prevState => {
+          const newMap = new Map(prevState);
+          newMap.set(message, !newMap.get(message));
+          return newMap;
+        });
+      };
+
     return ( 
             <div className="flex-1 flex flex-col">
                 <Heading
                     title="Query"
-                    description="Our most advanced query model"
+                    description="Query your data here"
                     icon={MessageSquare}
                     iconColour="text-white"
                     bgColour="bg-primary"
                 />
                 <div className="px-4 lg:px-8 flex-1 flex flex-col">
                     <div className="space-y-4 mt-4 flex-1">
-                        {isLoading && (
-                            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
-                                <Loader/>
-                            </div>
-                        )}
                         {messages.length===0 && !isLoading && (
                             <div> 
                                 <Empty label="No conversation started."/>
                             </div>
                         )}
-                        <div className="flex flex-col-reverse gap-y-4 overflow-y-auto">
+                        <div className="flex flex-col gap-y-4 overflow-y-auto">
                             {messages.map(message=>(
                                 <div 
                                     key={message.content}
-                                    className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg", 
+                                    className={cn("p-8 w-full flex-col items-start gap-x-8 rounded-lg", 
                                         message.role==="user"? "bg-white border border-black/10" : "bg-muted")
                                     }
                                 >
-                                    {message.role==="user"? <UserAvatar/> : <DhaniaAvatar/>}
-                                    <ReactMarkdown 
-                                        className="text-sm overflow-hidden leading-7"
-                                        components={{
-                                            pre:({node, ...props})=>(
-                                                <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
-                                                    <pre {...props}/>
-                                                </div>
-                                            ),
-                                            code:({node, ...props})=>(
-                                                    <code className="bg-black/10 rounded-lg p-1" {...props}/>
-                                            )
-                                        }}
-                                    >
-                                        {message.content || ""}
-                                    </ReactMarkdown>
+                                    <div className="flex space-x-2">
+                                        {message.role==="user"? <UserAvatar/> : <DhaniaAvatar/>}
+                                        <ReactMarkdown 
+                                            className="text-sm overflow-hidden leading-7"
+                                            components={{
+                                                pre:({node, ...props})=>(
+                                                    <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                                                        <pre {...props}/>
+                                                    </div>
+                                                ),
+                                                code:({node, ...props})=>(
+                                                        <code className="bg-black/10 rounded-lg p-1" {...props}/>
+                                                )
+                                            }}
+                                        >
+                                            {message.content || ""}
+                                        </ReactMarkdown>
+                                    </div>
+                                    <div className="mt-9 flex-col">
+                                        {message.metaData && <Button onClick={()=>handleToggleMetaData(message)} variant={"link"}>{!toggleMetaData.get(message)?"Show sources": "Hide sources"}{!toggleMetaData.get(message)?<ChevronDown/> : <ChevronUp/>}</Button>}
+                                        {message.metaData && toggleMetaData.get(message) &&
+                                            <pre className="bg-blue-950 max-h-96 overflow-y-auto text-gray-300 p-3 overflow-auto">
+                                                    {JSON.stringify(message.metaData,null, 2)!}
+                                            </pre>
+                                        }
+                                    </div>
                                 </div>
                             ))}
                         </div>
+                        {isLoading && (
+                            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+                                <Loader/>
+                            </div>
+                        )}
                     </div>
                     <div className="py-4">
                         <Form {...form}>

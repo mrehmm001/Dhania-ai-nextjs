@@ -5,12 +5,10 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {RecursiveCharacterTextSplitter} from "langchain/text_splitter"
 import {OpenAIEmbeddings} from "langchain/embeddings/openai"
-import { PineconeStore } from "langchain/vectorstores/pinecone";
+import { PGVectorStore } from "langchain/vectorstores/pgvector";
+import { PoolConfig } from "pg";
+import { getPGVectorStore, getUserPoolConfig } from "@/lib/pgvectorStore";
 
-const pinecone = new Pinecone({
-    apiKey: process.env["PINECONE_API_KEY"]!,
-    environment: 'gcp-starter',
-});
 export async function POST(
     req:Request
 ){
@@ -21,25 +19,12 @@ export async function POST(
     if(!userId){
         return new NextResponse("Access denied", {status:401})
     }
+    
     const response = await prismadb.userFile.findUnique({
         where:{fileName:fileBlob.name}
     })
-    
-    const loader = new PDFLoader(fileBlob)
-    const document = await loader.load();
-    
-    
-    const text_splitter = new RecursiveCharacterTextSplitter({chunkSize:1000,chunkOverlap:0,separators:[" ", ",", "\n"]})
-    const documents = await text_splitter.splitDocuments(document);
-    
-    const embeddings = new OpenAIEmbeddings({openAIApiKey:process.env["OPENAI_API_KEY"]})
-    const index = pinecone.index("medium-blog-embeddings-index");
-    //Store data to pineconedb
-    await PineconeStore.fromDocuments(documents,embeddings,{pineconeIndex:index})
-
-
     if(!response){
-        await prismadb.userFile.create({
+        const res = await prismadb.userFile.create({
             data:{
                 fileName:fileBlob.name,
                 fileSize:fileBlob.size,
@@ -47,7 +32,20 @@ export async function POST(
                 userId
             }
         })
+        const loader = new PDFLoader(fileBlob)
+        const document = await loader.load();
+        document.forEach(doc=>{
+            doc.metadata["pdf"]["info"]["name"]=fileBlob.name;
+        })
+        
+        const text_splitter = new RecursiveCharacterTextSplitter({chunkSize:1000,chunkOverlap:0,separators:[" ", ",", "\n"]})
+        const documents = await text_splitter.splitDocuments(document);
+        const embeddings = new OpenAIEmbeddings({openAIApiKey:process.env["OPENAI_API_KEY"]})
+
+        //Store data to pgvector
+        await PGVectorStore.fromDocuments(documents,embeddings,getUserPoolConfig()!);
     }
+    
     return new NextResponse("success", {status:200});
 }
 
@@ -72,9 +70,12 @@ export async function DELETE(req:Request){
     if(!fileName){
         return new NextResponse("File not found", {status:400})
     }
+
     await prismadb.userFile.delete({
         where:{fileName}
     });
-
+    
+    await prismadb.$queryRawUnsafe(`DELETE FROM ${userId} WHERE metadata -> 'pdf' -> 'info' ->> 'name' = '${fileName}'`)
+    
     return new NextResponse("File deleted", {status:200})
 }

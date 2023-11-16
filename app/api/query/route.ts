@@ -1,16 +1,10 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import OpenAIApi from "openai"
-import { Pinecone } from '@pinecone-database/pinecone';
-import {OpenAIEmbeddings} from "langchain/embeddings/openai"
-import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { RetrievalQAChain } from "langchain/chains";
-
-const pinecone = new Pinecone({
-    apiKey: process.env["PINECONE_API_KEY"]!,
-    environment: 'gcp-starter',
-});
+import { getPGVectorStore } from "@/lib/pgvectorStore";
+import { PromptTemplate } from "langchain/prompts";
 
 const openai = new OpenAIApi({
     apiKey: process.env.OPENAI_API_KEY,
@@ -32,16 +26,17 @@ export async function POST(
         if(!query){
             return new NextResponse("Messages are required", {status:400});
         }
-        
-        const embeddings = new OpenAIEmbeddings({openAIApiKey:process.env["OPENAI_API_KEY"]})
-        const index = pinecone.index("medium-blog-embeddings-index");
-        const retreiver = new PineconeStore(embeddings, {pineconeIndex:index}).asRetriever();
+
         const model = new ChatOpenAI({ modelName: "gpt-3.5-turbo"});
-        const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true});
-        const result = await chain.call({query:query.content})
-        console.log("hello",)
-        
-        return NextResponse.json(result["text"]);
+        const pgVectorStore = await getPGVectorStore();
+        const retreiver = pgVectorStore!.asRetriever();
+        const prompt = new PromptTemplate({
+            inputVariables: ["query","context"],
+            template: "You are query bot called Dhania. You need to answer this query {query} based from this context {context}. Give normal response to any query that seems normal like e.g 'hello'. Your answer should be in markdown format, so make sure to use bullet points, headings, bold text.",
+          });
+        const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true, prompt:prompt});
+        const result = await chain.call({query:query})
+        return NextResponse.json(result);
     }catch(error){
         console.log("[CONVERSATION_ERROR]",error);
         return new NextResponse("Internal error", {status:500});
