@@ -5,6 +5,7 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import { getPGVectorStore } from "@/lib/pgvectorStore";
 import { PromptTemplate } from "langchain/prompts";
+import { checkMessageLimit, increaseMessageApiLimit } from "@/lib/api-limit";
 
 const openai = new OpenAIApi({
     apiKey: process.env.OPENAI_API_KEY,
@@ -32,8 +33,8 @@ export async function POST(
         const retreiver = pgVectorStore!.asRetriever();
         const prompt = new PromptTemplate({
             inputVariables: ["query","context"],
-            template: "You are query bot called Dhania. You need to answer this query {query} based from this context {context}. Give normal response to any query that seems normal like e.g 'hello'. Your answer should be in markdown format, so make sure to use bullet points, headings, bold text.",
-          });
+            template: "You are Dhania, a query bot. Your primary task is to provide responses to various queries '{query}'. First, evaluate the query to understand its nature and complexity. Depending on this assessment, decide whether to incorporate the provided context '{context}' into your response. If the query is complex or requires specific background knowledge, use the given context to enhance your answer. For more straightforward queries, a direct response without additional context might be more suitable. Regardless of the context usage, ensure your response is formatted in Markdown, utilizing bullet points, headings, and bold text to ensure clarity and emphasis. Your goal is to provide clear, concise, and relevant answers, tailored to the specific requirements of each query.",
+        });
         const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true, prompt:prompt});
         const result = await chain.call({query:query})
         return NextResponse.json(result);
