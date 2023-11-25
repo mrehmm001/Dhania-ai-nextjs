@@ -49,8 +49,8 @@ const AddDataPage = () => {
                             <form onSubmit={onSubmit}>
                                 <Label htmlFor="file" className="ml-2">Select document</Label>
                                 <div className="flex space-x-3">
-                                    <Input disabled={isLoading} onChange={(e)=>setFile(e.target.files?.[0])} id="file" type="file" />
-                                    <Button disabled={isLoading} type="submit">Upload</Button>
+                                    <Input data-input="file" disabled={isLoading} onChange={(e)=>setFile(e.target.files?.[0])} id="file" type="file" />
+                                    <Button data-input="submit" disabled={isLoading} type="submit">Upload</Button>
                                 </div>
                             </form>
                         </div> 

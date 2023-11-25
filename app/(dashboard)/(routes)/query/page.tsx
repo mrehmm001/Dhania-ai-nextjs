@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ChatCompletionMessageParam } from "openai/resources/chat/index.mjs";
-import { useEffect, useRef, useState } from "react";
+import {useState } from "react";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
 import { cn } from "@/lib/utils";
@@ -20,8 +20,6 @@ import UserAvatar from "@/components/user-avatar";
 import DhaniaAvatar from "@/components/dhania-avatar";
 import { useProModal } from "@/hooks/use-pro-modal";
 import toast from "react-hot-toast";
-import { io } from 'socket.io-client';
-import { useUser } from "@clerk/nextjs";
 import ReactMarkdown from "react-markdown";
 
 type chatCompetionInterface = ChatCompletionMessageParam &{
@@ -101,6 +99,7 @@ const QueryPage = () => {
                             {messages.map(message=>(
                                 <div 
                                     key={message.content}
+                                    data-mesage={message.role}
                                     className={cn("p-8 w-full flex-col items-start gap-x-8 rounded-lg", 
                                         message.role==="user"? "bg-white border border-black/10" : "bg-muted")
                                     }
@@ -135,7 +134,7 @@ const QueryPage = () => {
                             ))}
                         </div>
                         {isLoading && (
-                            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+                            <div data-loading className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
                                 <Loader/>
                             </div>
                         )}
@@ -151,7 +150,7 @@ const QueryPage = () => {
                                     render={({field})=>(
                                         <FormItem className="col-span-12 lg:col-span-10">
                                             <FormControl className="m-0 p-0">
-                                                <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                                                <Input data-input="query" className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent" 
                                                 disabled={isLoading}
                                                 placeholder="Hey Dhania..."
                                                 {...field}
@@ -160,7 +159,7 @@ const QueryPage = () => {
                                         </FormItem>
                                     )}
                                 />
-                                <Button disabled={isLoading} className="col-span-12 lg:col-span-2 w-full">Enter <Sparkles className="w-4 ml-3 fill-white"/></Button>
+                                <Button data-button="submit" disabled={isLoading} className="col-span-12 lg:col-span-2 w-full">Enter <Sparkles className="w-4 ml-3 fill-white"/></Button>
                             </form>
                         </Form>
                     </div>

@@ -61,12 +61,12 @@ const DataPage = () => {
                 />
                 <div className="px-4 lg:px-8 flex-1 flex flex-col">
                     <div className="flex space-x-1 w-72">
-                        <Input onChange={(e)=>onSearch(e.target.value)} placeholder="Search..."/>
-                        <Button onClick={()=>router.push("/data/new-data")}><Plus/></Button>
+                        <Input data-input="search" onChange={(e)=>onSearch(e.target.value)} placeholder="Search..."/>
+                        <Button data-button="new" onClick={()=>router.push("/data/new-data")}><Plus/></Button>
                     </div>
                     <div>
-                    <Table>
-                    <TableHeader>
+                    <Table data-table>
+                    <TableHeader data-header>
                         <TableRow>
                         <TableHead>File name</TableHead>
                         <TableHead>Type</TableHead>
@@ -76,11 +76,11 @@ const DataPage = () => {
                     </TableHeader>
                     <TableBody>
                         {documents && documents.map(doc=>(
-                            <TableRow key={doc.id}>
+                            <TableRow data-item={doc.fileName} key={doc.id}>
                                 <TableCell>{doc.fileName}</TableCell>
                                 <TableCell>{doc.fileType}</TableCell>
                                 <TableCell>{formatBytes(doc.fileSize)}</TableCell>
-                                <TableCell className="text-right"><Button onClick={async(e)=>{
+                                <TableCell className="text-right"><Button data-button="delete" onClick={async(e)=>{
                                     axios.delete("/api/documents",{data:{fileName:doc.fileName}}).then(()=>{
                                         toast.success("Removed "+doc.fileName);
                                         setDocuments(documents.filter(d=>d.fileName!=doc.fileName));

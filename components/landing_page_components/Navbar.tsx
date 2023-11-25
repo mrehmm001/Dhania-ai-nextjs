@@ -7,15 +7,15 @@ function Navar() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     return ( 
         <nav className="flex items-center justify-between">
-            <a href="/" className="cursor-pointer flex items-center">
+            <a data-logo href="/" className="cursor-pointer flex items-center">
                 <div className="w-10 h-10 relative">
                     <Image fill src="/logo.png" alt="Dhania logo" />
                 </div>
                 <div className="uppercase text-2xl">Dhania.Ai</div>
             </a>
             <div className="hidden justify-between md:flex">
-                <a className="p-4" href="https://dhania.readme.io/docs">API</a>
-                <a className="p-4" href="/dashboard">Account</a>
+                <a data-link="api" className="p-4" href="https://dhania.readme.io/docs">API</a>
+                <a data-link="dashboard" className="p-4" href="/dashboard">Account</a>
             </div>
             <div className="md:hidden block" onClick={()=>setMenuOpen(!isMenuOpen)}>
                 {isMenuOpen? <X className="text-3xl mr-2 hover:cursor-pointer invert"/> :<Menu className="text-3xl mr-2 md:hidden block hover:cursor-pointer"/>}
@@ -28,8 +28,8 @@ function Navar() {
                     <div className="uppercase text-2xl">Dhania.Ai</div>
                 </a>
                 <div className="flex flex-col p-4">
-                    <a className="p-4 border-b border-gray-600" href="https://dhania.readme.io/docs">API</a>
-                    <a className="p-4" href="/dashboard">Account</a>
+                    <a data-link="api" className="p-4 border-b border-gray-600" href="https://dhania.readme.io/docs">API</a>
+                    <a data-link="dashboard" className="p-4" href="/dashboard">Account</a>
                 </div>
             </div>
         </nav>
