@@ -17,6 +17,9 @@ export function getUserPoolConfig(){
           user: "postgres",
           password: process.env["PGVECTOR_PASSWORD"],
           database: "postgres",
+          ssl:{
+            rejectUnauthorized:false
+          },
         } as PoolConfig,
         tableName: userId,
         columns: {
