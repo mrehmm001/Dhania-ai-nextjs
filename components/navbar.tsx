@@ -3,14 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import MobileSidebar from "./mobile-sidebar";
-import { Auth } from "aws-amplify";
 import { useRouter } from "next/navigation";
-// import { checkSubscription } from "@/lib/subscription";
-import { Amplify } from "aws-amplify";
-import awsExports from "@/aws-exports.json";
 import { UserButton } from "@clerk/nextjs";
 
-Amplify.configure({ ...awsExports, ssr: true });
 
 interface NavbarProps{
     apiLimitCount:number;

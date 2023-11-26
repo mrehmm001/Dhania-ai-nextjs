@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "@aws-amplify/ui-react/styles.css";
 
 html,
 body,
