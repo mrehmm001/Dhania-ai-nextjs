@@ -18,7 +18,7 @@ const tools = [
     icon:Database,
     iconColour:"text-white",
     bgColour:"bg-primary",
-    href: "/video"
+    href: "/data"
   },
 ]
 
