@@ -34,11 +34,11 @@ export async function POST(
         const model = new ChatOpenAI({ modelName: "gpt-3.5-turbo"});
         const pgVectorStore = await getPGVectorStore();
         const retreiver = pgVectorStore!.asRetriever();
-        const prompt = new PromptTemplate({
-            inputVariables: ["query","context"],
-            template: "You are Dhania, a query bot. Your primary task is to provide responses to various queries '{query}'. First, evaluate the query to understand its nature and complexity. Depending on this assessment, decide whether to incorporate the provided context '{context}' into your response. If the query is complex or requires specific background knowledge, use the given context to enhance your answer. For more straightforward queries, a direct response without additional context might be more suitable. Regardless of the context usage, ensure your response is formatted in Markdown, utilizing bullet points, headings, and bold text to ensure clarity and emphasis. Your goal is to provide clear, concise, and relevant answers, tailored to the specific requirements of each query.",
-        });
-        const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true, prompt:prompt});
+        // const prompt = new PromptTemplate({
+        //     inputVariables: ["query","context"],
+        //     template: "You are Dhania, a query bot. Your primary task is to provide responses to various queries '{query}'. First, evaluate the query to understand its nature and complexity. Depending on this assessment, decide whether to incorporate the provided context '{context}' into your response. If the query is complex or requires specific background knowledge, use the given context to enhance your answer. For more straightforward queries, a direct response without additional context might be more suitable. Regardless of the context usage, ensure your response is formatted in Markdown, utilizing bullet points, headings, and bold text to ensure clarity and emphasis. Your goal is to provide clear, concise, and relevant answers, tailored to the specific requirements of each query.",
+        // });
+        const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true});
         const result = await chain.call({query:query})
         await increaseMessageCount();
         return NextResponse.json(result);
