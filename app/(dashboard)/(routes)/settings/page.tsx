@@ -1,6 +1,5 @@
 "use client";
 
-import AmplifyProvider from "@/components/amplify-provider";
 import Heading from "@/components/heading";
 import { SubscriptionButton } from "@/components/subscription-button";
 import { Settings } from "lucide-react";

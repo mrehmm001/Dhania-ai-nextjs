@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { CreateChatCompletionRequestMessage } from "openai/resources/chat/index.mjs";
 import { useState } from "react";
 import Empty from "@/components/empty";
 import Loader from "@/components/loader";
@@ -21,12 +20,12 @@ import DhaniaAvatar from "@/components/dhania-avatar";
 import ReactMarkdown from "react-markdown";
 import { useProModal } from "@/hooks/use-pro-modal";
 import toast from "react-hot-toast";
-import AmplifyProvider from "@/components/amplify-provider";
+import { ChatCompletionMessageParam  } from "openai/resources/chat";
 
 const CodePage = () => {
     const proModal = useProModal();
     const router = useRouter();
-    const [messages, setMessages] = useState<CreateChatCompletionRequestMessage[]>([]);
+    const [messages, setMessages] = useState<ChatCompletionMessageParam []>([]);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues:{
@@ -38,7 +37,7 @@ const CodePage = () => {
 
     const onSubmit =async (values:z.infer<typeof formSchema>) => {
         try{
-            const userMessage: CreateChatCompletionRequestMessage = {
+            const userMessage: ChatCompletionMessageParam  = {
                 role:"user",
                 content:values.prompt
             };

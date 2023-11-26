@@ -1,6 +1,5 @@
 "use client";
 
-import AmplifyProvider from "@/components/amplify-provider";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Code, Database, ImageIcon, MessageSquare, Music, VideoIcon } from "lucide-react";
