@@ -5,7 +5,7 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import { getPGVectorStore } from "@/lib/pgvectorStore";
 import { PromptTemplate } from "langchain/prompts";
-import { checkMessageLimit, increaseMessageApiLimit } from "@/lib/api-limit";
+import { checkMessageLimit, increaseMessageCount } from "@/lib/api-limit";
 
 const openai = new OpenAIApi({
     apiKey: process.env.OPENAI_API_KEY,
@@ -20,6 +20,9 @@ export async function POST(
         const {query} = body;
         if(!userId){
             return new NextResponse("Unauthorized", {status:401})
+        }
+        if(!(await checkMessageLimit())){
+            return new NextResponse("Message limit for user reached!", {status:400}) 
         }
         if(!openai.apiKey){
             return new NextResponse("OpenAI API Key not configured", {status:500}) 
@@ -37,6 +40,7 @@ export async function POST(
         });
         const chain = RetrievalQAChain.fromLLM(model, retreiver,{returnSourceDocuments:true, prompt:prompt});
         const result = await chain.call({query:query})
+        await increaseMessageCount();
         return NextResponse.json(result);
     }catch(error){
         console.log("[CONVERSATION_ERROR]",error);

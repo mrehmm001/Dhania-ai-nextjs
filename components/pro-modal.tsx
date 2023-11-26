@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Music, ImageIcon, VideoIcon, Code, Check, Zap } from "lucide-react";
+import { MessageSquare, Check, Zap, Database } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,16 +13,16 @@ import toast from "react-hot-toast";
 
 const tools = [
     {
-      label:"Conversation",
+      label:"Query",
       icon:MessageSquare,
-      colour: "text-violet-500",
-      bgColour: "bg-violet-500/10",
+      colour:"text-white",
+      bgColour:"bg-primary",
     },
     {
-      label:"Code Generation",
-      icon:Code,
-      colour: "text-green-700",
-      bgColour: "bg-green-700/10",
+      label:"Data Ingestion",
+      icon:Database,
+      colour:"text-white",
+      bgColour:"bg-primary",
     },
   ]
   

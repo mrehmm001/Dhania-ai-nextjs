@@ -1,13 +1,12 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { Pinecone } from '@pinecone-database/pinecone';
 import { PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {RecursiveCharacterTextSplitter} from "langchain/text_splitter"
 import {OpenAIEmbeddings} from "langchain/embeddings/openai"
 import { PGVectorStore } from "langchain/vectorstores/pgvector";
-import { PoolConfig } from "pg";
-import { getPGVectorStore, getUserPoolConfig } from "@/lib/pgvectorStore";
+import { getUserPoolConfig } from "@/lib/pgvectorStore";
+import { checkDocumentLimit, decreaseDocumentCount, increaseDocumentCount } from "@/lib/api-limit";
 
 export async function POST(
     req:Request
@@ -24,7 +23,10 @@ export async function POST(
         where:{fileName:fileBlob.name}
     })
     if(!response){
-        const res = await prismadb.userFile.create({
+        if(!(await checkDocumentLimit())){
+            return new NextResponse("Max document count reached", {status:400});
+        }
+        await prismadb.userFile.create({
             data:{
                 fileName:fileBlob.name,
                 fileSize:fileBlob.size,
@@ -32,6 +34,9 @@ export async function POST(
                 userId
             }
         })
+
+        await increaseDocumentCount();
+        
         const loader = new PDFLoader(fileBlob)
         const document = await loader.load();
         document.forEach(doc=>{
@@ -74,6 +79,8 @@ export async function DELETE(req:Request){
     await prismadb.userFile.delete({
         where:{fileName}
     });
+
+    await decreaseDocumentCount();
     
     await prismadb.$queryRawUnsafe(`DELETE FROM ${userId} WHERE metadata -> 'pdf' -> 'info' ->> 'name' = '${fileName}'`)
     

@@ -1,1 +1,2 @@
-export const MAX_FREE_COUNTS = 5;
+export const MAX_FREE_MESSAGE_COUNT = 100;
+export const MAX_FREE_DOCUMENT_UPLOADS = 5;

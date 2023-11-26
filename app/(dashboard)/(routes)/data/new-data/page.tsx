@@ -8,8 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const AddDataPage = () => {
+    const proModal = useProModal();
     const [file,setFile] = useState<File>();
     const [isLoading, setLoading] = useState(false);
     
@@ -29,9 +31,13 @@ const AddDataPage = () => {
           })
         toast.success("File uploaded!");
         setLoading(false);
-       }catch(e){
+       }catch(error:any){
         setLoading(false);
-        console.error(e);
+        if(error?.response?.status=="400"){
+            proModal.onOpen();
+        }else{
+            toast.error("Something went wrong");
+        }
        }
     }
 

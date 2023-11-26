@@ -60,7 +60,7 @@ const QueryPage = () => {
             setMessages((current)=>[...current , assistantMessage]);
             form.reset();
         }catch(error:any){
-            if(error?.response?.status=="403"){
+            if(error?.response?.status=="400"){
                 proModal.onOpen();
             }else{
                 toast.error("Something went wrong");
