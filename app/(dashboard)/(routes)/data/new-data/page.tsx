@@ -21,6 +21,11 @@ const AddDataPage = () => {
 
        try{ 
         setLoading(true);
+        if(file.type!="application/pdf"){
+            toast.error("Invalid file: PDF file type only");
+            setLoading(false);
+            return;
+        }
         const data = new FormData();
         data.set("file",file);
         await axios("/api/documents",{
@@ -35,6 +40,8 @@ const AddDataPage = () => {
         setLoading(false);
         if(error?.response?.status=="400"){
             proModal.onOpen();
+        }else if(error?.response?.status=="300"){
+            toast.error("Invalid file: PDF file type only");
         }else{
             toast.error("Something went wrong");
         }
@@ -53,7 +60,7 @@ const AddDataPage = () => {
                 <div className="px-4 lg:px-8 flex-1 flex flex-col">
                         <div className="flex-col w-80 space-x-1 mt-2">
                             <form onSubmit={onSubmit}>
-                                <Label htmlFor="file" className="ml-2">Select document</Label>
+                                <Label htmlFor="file" className="ml-2">Select document (pdf only)</Label>
                                 <div className="flex space-x-3">
                                     <Input data-input="file" disabled={isLoading} onChange={(e)=>setFile(e.target.files?.[0])} id="file" type="file" />
                                     <Button data-input="submit" disabled={isLoading} type="submit">Upload</Button>

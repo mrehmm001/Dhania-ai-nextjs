@@ -18,6 +18,10 @@ export async function POST(
     if(!userId){
         return new NextResponse("Access denied", {status:401})
     }
+
+    if(fileBlob.type!=="application/pdf"){
+        return new NextResponse("Invalid file type: PDF only", {status:300})
+    }
     
     const response = await prismadb.userFile.findUnique({
         where:{fileName:fileBlob.name}
