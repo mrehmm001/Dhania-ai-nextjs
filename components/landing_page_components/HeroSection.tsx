@@ -27,7 +27,7 @@ function HeroSection() {
                 <Paragraph className="text-center">Explore with Dhania: AI-Power Discovery. Unveiling knowledge through nature-inspuired AI.</Paragraph>
                 <div className="flex justify-center">
                     <Link href="/dashboard">
-                        <Button data-heading="start-now" className="bg-green-600 hover:bg-green-500 text-lg">Start now for free</Button>
+                        <Button data-heading="start-now" className="bg-green-600 hover:bg-green-500 text-sm md:text-lg xl:text-xl">Start now for free</Button>
                     </Link>
                 </div>
                 <Paragraph className="text-center">No credit card required.</Paragraph>
