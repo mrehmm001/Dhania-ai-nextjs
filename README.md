@@ -1,34 +1,13 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+![Logo](public\landing_images\dhania.png)
 
-First, run the development server:
+# Dhania
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Dhania is my ongoing project, which I started in 2023. It is a Retrieval Augmented Generation (RAG) AI model, designed to enhance conversational interactions by providing contextually relevant responses based on the input data. Dhania leverages a robust stack of cutting-edge technologies, including Next.js, Prisma, Langchain, and prompt engineering, to achieve its goal of improving the dynamics of conversation through AI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Dhania aims to transform how conversational AI understands and responds to human input. By integrating a RAG model, Dhania is not just another chatbot. It's an AI that can retrieve and generate information that's relevant and contextually appropriate, making conversations feel more natural and informative.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Video demonstration
+[![Watch the Dhania Demonstration Video](public\dhania-ui.jpg)](https://i.imgur.com/c5yC3Wy.mp4)
