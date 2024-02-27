@@ -1,5 +1,5 @@
 
-![Logo](public\landing_images\dhania.png)
+![Logo](public/logo.png)
 
 # Dhania
 
@@ -10,4 +10,4 @@ Dhania is my ongoing project, which I started in 2023. It is a Retrieval Augment
 Dhania aims to transform how conversational AI understands and responds to human input. By integrating a RAG model, Dhania is not just another chatbot. It's an AI that can retrieve and generate information that's relevant and contextually appropriate, making conversations feel more natural and informative.
 
 ## Video demonstration
-[![Watch the Dhania Demonstration Video](public\dhania-ui.jpg)](https://i.imgur.com/c5yC3Wy.mp4)
+[![Watch the Dhania Demonstration Video](public/dhania-ui.jpg)](https://i.imgur.com/c5yC3Wy.mp4)
