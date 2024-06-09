@@ -1,6 +1,12 @@
-name: Workflow
+name: Cypress Tests
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run the Cypress tests on'
+        required: true
+        default: 'main'
 
 jobs:
   cypress-run:
@@ -8,6 +14,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          npm i
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
